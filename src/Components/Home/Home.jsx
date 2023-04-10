@@ -23,7 +23,7 @@ function Home() {
           </p>
         </div>
         <div className="btns">
-          <button className="signIn" id="btn">Sign In</button>
+          <button className="signIn" id="btn" onClick={()=>{navigate('/login')}}>Sign In</button>
           <button className="signUp" id="btn" onClick={()=>{navigate('/register')}}>Sign Up</button>
         </div>
       </div>

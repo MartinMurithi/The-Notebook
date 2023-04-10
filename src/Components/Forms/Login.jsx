@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import { auth } from "../../Config/Firebase";
@@ -12,8 +12,8 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-        await signInWithEmailAndPassword(auth, email, password);
-        navigate('/notes')
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/notes");
     } catch (error) {
       setError(error.message);
     }
@@ -27,8 +27,10 @@ function Login() {
           type="email"
           placeholder="example@gmail.com"
           required
-                  id="input_email"
-                  onChange={(e)=>{setEmail(e.target.value)}}
+          id="input_email"
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
         />
 
         <label htmlFor="input_password">Password</label>
@@ -36,10 +38,12 @@ function Login() {
           type="password"
           placeholder="Password"
           required
-                  id="input_password"
-                  onChange={(e)=>{setPassword(e.target.value)}}
-              />
-              <p className="errorMessage">{ error }</p>
+          id="input_password"
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+        />
+        <p className="errorMessage">{error}</p>
         <button className="loginBtn" onClick={handleLogin}>
           Login
         </button>
