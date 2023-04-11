@@ -5,6 +5,7 @@ import "./Notes.css";
 import { FaPlus } from "react-icons/fa";
 import { Logo } from "../Logo/Logo";
 import NoteInput from "../NoteInput/NoteInput";
+import NoteItem from "../NotesItem/NotesItem";
 
 function Notes() {
   const navigate = useNavigate();
@@ -28,19 +29,22 @@ function Notes() {
   return (
     <div className="notesDiv">
       <Logo />
+
       <div className="logOutBtnDiv">
         <button onClick={handleLogout} className="logOutBtn">
           LogOut
         </button>
       </div>
-
-      <div className="section">
-        <div className="addNoteDiv">
-          <div className="bcgDiv">
-            <FaPlus className="addNoteBtn" onClick={handleDisplayNoteInput} />
+      <div className="util">
+        <div className="section">
+          <div className="addNoteDiv">
+            <div className="bcgDiv">
+              <FaPlus className="addNoteBtn" onClick={handleDisplayNoteInput} />
+            </div>
           </div>
+          {displayNoteInputForm && <NoteInput />}
         </div>
-        {displayNoteInputForm && <NoteInput />}
+        <NoteItem />
       </div>
     </div>
   );

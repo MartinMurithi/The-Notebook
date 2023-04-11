@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import "./NoteInput.css";
 import { useDispatch } from "react-redux";
-import { addNote, fetchNotes } from "../../Redux/Features/Slice";
-import {FaXingSquare} from 'react-icons/fa'
+import "./NoteInput.css";
+import { editNotes, fetchNotes } from "../../Redux/Features/Slice";
 
-function NoteInput() {
+function NoteUpdate() {
   const [closeForm, setCloseForm] = useState(true);
   const [noteTitle, setNoteTitle] = useState("");
   const [noteDescription, setnoteDescription] = useState("");
@@ -13,18 +12,17 @@ function NoteInput() {
 
   const handleCloseForm = () => {
     setCloseForm((current) => !current);
+    console.log("close form");
   };
-
-  const handleAddNote = async () => {
+  const handleUpdateNote = async (id) => {
     setDate(date);
-    const noteObj = { noteTitle, noteDescription, date };
     if (noteTitle.trim().length > 0 || noteDescription.trim().length > 0) {
-      dispatch(addNote(noteObj));
+      dispatch(editNotes({ id },{noteTitle: noteTitle, noteDescription: noteDescription, date: date }));
       dispatch(fetchNotes());
       setNoteTitle("");
       setnoteDescription("");
       handleCloseForm();
-      } else {
+    } else {
       console.log("Both fields cant be empty");
     }
   };
@@ -34,9 +32,9 @@ function NoteInput() {
       {closeForm && (
         <div className="formNote">
           <div className="title_cancelBtn">
-            <h4 className="formTitle">Add a new note</h4>
+            <h4 className="formTitle">Update note</h4>
             <p className="cancelBtn" onClick={handleCloseForm}>
-              <FaXingSquare/>
+              X
             </p>
           </div>
           <label htmlFor="inputTitle" className="titleLabel">
@@ -74,8 +72,8 @@ function NoteInput() {
             }}
           />
 
-          <button className="addBtn" onClick={handleAddNote}>
-            Add Note
+          <button className="addBtn" onClick={handleUpdateNote}>
+            Update Note
           </button>
         </div>
       )}
@@ -83,4 +81,4 @@ function NoteInput() {
   );
 }
 
-export default NoteInput;
+export default NoteUpdate;
