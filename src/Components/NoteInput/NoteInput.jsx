@@ -20,7 +20,6 @@ function NoteInput() {
     const noteObj = { noteTitle, noteDescription, date };
     if (noteTitle.trim().length > 0 || noteDescription.trim().length > 0) {
       dispatch(addNote(noteObj));
-      dispatch(fetchNotes());
       setNoteTitle("");
       setnoteDescription("");
       handleCloseForm();
@@ -54,9 +53,6 @@ function NoteInput() {
               setNoteTitle(e.target.value);
             }}
           />
-          {/* {isTitleEmpty ? (
-            <p className="error">*Field cannot be empty</p>
-          ) : ''} */}
 
           <label htmlFor="inputDescription" className="titleLabel">
             Description

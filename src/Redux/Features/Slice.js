@@ -17,7 +17,6 @@ const initialState = {
 };
 
 const dbRef = collection(db, "notes");
-// const dispatch = useDispatch();
 
 export const fetchNotes = createAsyncThunk(
   "notes/fetchnotes",
@@ -40,12 +39,11 @@ export const editNotes = createAsyncThunk(
   "edit/notes",
   async (payload, thunkApi) => {
     try {
-      const note = doc(dbRef, payload.id);
-      await updateDoc(note, { ...payload });
-      console.log(note);
+      let note = doc(dbRef, payload.id);
+      await updateDoc(note, payload);
+      thunkApi.fetchNotes();
     } catch (error) {
-      thunkApi.rejectWithValue(error);
-      console.log(error);
+      console.error(error.message);
     }
   }
 );
@@ -56,6 +54,8 @@ export const deleteNotes = createAsyncThunk(
     try {
       let note = doc(dbRef, payload.id);
       await deleteDoc(note);
+      // const dispatch = useDispatch();
+      thunkApi.dispatch(fetchNotes());
     } catch (error) {
       thunkApi.rejectWithValue(error);
       console.error(error.message);
@@ -67,8 +67,8 @@ export const addNote = createAsyncThunk(
   "add/notes",
   async (payload, thunkApi) => {
     try {
-      const note = await addDoc(dbRef, { ...payload });
-      console.log(note);
+      await addDoc(dbRef, { ...payload });
+      thunkApi.dispatch(fetchNotes());
     } catch (error) {
       thunkApi.rejectWithValue(error);
     }

@@ -1,32 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import "./NoteInput.css";
+import { db } from "../../Config/Firebase";
+import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { editNotes, fetchNotes } from "../../Redux/Features/Slice";
 
-function NoteUpdate() {
+function NoteUpdate({ id, title, description }) {
   const [closeForm, setCloseForm] = useState(true);
   const [noteTitle, setNoteTitle] = useState("");
   const [noteDescription, setnoteDescription] = useState("");
   const [date, setDate] = useState(new Date().toLocaleDateString());
+  const [notte, setNote] = useState({});
+
   const dispatch = useDispatch();
+  const dbRef = collection(db, "notes");
+
+  useEffect(() => {
+    const getNote = async () => {
+      try {
+        const note = doc(dbRef, id);
+        const n = await getDoc(note);
+        setNote(n.data());
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    getNote();
+  }, [id]);
+
+  console.log(notte);
 
   const handleCloseForm = () => {
     setCloseForm((current) => !current);
-    console.log("close form");
-  };
-  const handleUpdateNote = async (id) => {
-    setDate(date);
-    if (noteTitle.trim().length > 0 || noteDescription.trim().length > 0) {
-      dispatch(editNotes({ id },{noteTitle: noteTitle, noteDescription: noteDescription, date: date }));
-      dispatch(fetchNotes());
-      setNoteTitle("");
-      setnoteDescription("");
-      handleCloseForm();
-    } else {
-      console.log("Both fields cant be empty");
-    }
   };
 
+  const editNote = async (id) => {
+    setDate(date);
+
+    try {
+      if (noteTitle.trim().length > 0 || noteDescription.trim().length > 0) {
+        const note = doc(dbRef, id);
+        await updateDoc(note, {noteTitle: noteTitle, noteDescription, date });
+
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+    handleCloseForm();
+    window.location.reload();
+  };
   return (
     <div className="noteInputDiv">
       {closeForm && (
@@ -45,16 +67,13 @@ function NoteUpdate() {
             placeholder="Note title"
             required
             name="inputTitle"
-            value={noteTitle}
+            
             id="inputTitle"
             className="noteInput"
             onChange={(e) => {
               setNoteTitle(e.target.value);
             }}
           />
-          {/* {isTitleEmpty ? (
-            <p className="error">*Field cannot be empty</p>
-          ) : ''} */}
 
           <label htmlFor="inputDescription" className="titleLabel">
             Description
@@ -63,7 +82,7 @@ function NoteUpdate() {
             type="text"
             placeholder="Note description"
             required
-            value={noteDescription}
+            
             id="inputDescription"
             className="noteInput"
             rows={5}
@@ -72,7 +91,12 @@ function NoteUpdate() {
             }}
           />
 
-          <button className="addBtn" onClick={handleUpdateNote}>
+          <button
+            className="addBtn"
+            onClick={() => {
+              editNote(id);
+            }}
+          >
             Update Note
           </button>
         </div>

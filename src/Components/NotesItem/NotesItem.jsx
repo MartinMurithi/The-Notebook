@@ -7,10 +7,13 @@ import NoteUpdate from "../NoteInput/NoteUpdate";
 
 function NoteItem() {
   const [noteTitle, setNoteTitle] = useState("");
-  const [noteDescription, setNoteDescriptio] = useState("");
+  const [noteDescription, setnoteDescription] = useState("");
   const [date, setDate] = useState("");
-  const [noteItems, setNoteItems] = useState([]);
   const [displayUpdateForm, setDisplayUpdateForm] = useState(false);
+
+  const [formUpdateID, setFormUpdateID] = useState(null);
+  const [formUpdateTitle, setFormUpdateTitle] = useState(null);
+  const [formUpdateDescription, setFormUpdateDescription] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -20,17 +23,16 @@ function NoteItem() {
 
   const deleteNote = (id) => {
     dispatch(deleteNotes({ id }));
-    dispatch(fetchNotes());
   };
 
-  const updateNote = (id) => {
-    setDisplayUpdateForm(true);
-    console.log('edit note');
+  const handleDisplayUpdateForm = (id, title, description) => {
+    setDisplayUpdateForm((current) => !current);
+    setFormUpdateID(id);
+    setFormUpdateTitle(title);
+    setFormUpdateDescription(description);
   };
 
-  useEffect(() => {
-    dispatch(fetchNotes());
-  }, []);
+  console.log(notes.notes);
 
   return (
     <>
@@ -39,7 +41,7 @@ function NoteItem() {
             return (
               <>
                 <div className="noteItemDiv" key={note.id}>
-                  <div className="noteItem" >
+                  <div className="noteItem">
                     <div className="titleDiv">
                       <h2 className="noteTitle">{note.noteTitle}</h2>
                     </div>
@@ -55,7 +57,11 @@ function NoteItem() {
                         <FaEdit
                           className="utilIcons"
                           onClick={() => {
-                            updateNote(note.id);
+                            handleDisplayUpdateForm(
+                              note.id,
+                              note.noteTitle,
+                              note.noteDescription
+                            );
                           }}
                         />
                         <FaTrash
@@ -68,7 +74,14 @@ function NoteItem() {
                     </div>
                   </div>
                 </div>
-                {displayUpdateForm && <NoteUpdate/>}
+
+                {displayUpdateForm && (
+                  <NoteUpdate
+                    id={formUpdateID}
+                    title={formUpdateTitle}
+                    description={formUpdateDescription}
+                  />
+                )}
               </>
             );
           })
