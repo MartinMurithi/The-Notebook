@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import "./NoteInput.css";
 import { db } from "../../Config/Firebase";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
@@ -12,7 +11,6 @@ function NoteUpdate({ id, title, description }) {
   const [date, setDate] = useState(new Date().toLocaleDateString());
   const [notte, setNote] = useState({});
 
-  const dispatch = useDispatch();
   const dbRef = collection(db, "notes");
 
   useEffect(() => {
@@ -27,8 +25,6 @@ function NoteUpdate({ id, title, description }) {
     };
     getNote();
   }, [id]);
-
-  console.log(notte);
 
   const handleCloseForm = () => {
     setCloseForm((current) => !current);
